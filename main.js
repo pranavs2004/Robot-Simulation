@@ -39,10 +39,10 @@ keysPressed = {};
 
 document.getElementById("canvas").addEventListener("keydown", (e) => {
   // switch(e.keyCode) {
-  //   case 65:  // A, left
+  //   case 65:  // A, turn left
   //     scene.getMeshByName("Box").rotation.y -= 0.03;
   //     break;
-  //   case 68:  // D, right
+  //   case 68:  // D, turn right
   //     scene.getMeshByName("Box").rotation.y += 0.03;
   //     break;
   //   case 83:  // S, backward
@@ -57,16 +57,16 @@ document.getElementById("canvas").addEventListener("keydown", (e) => {
 
   keysPressed[e.key] = true;
 
-  if (keysPressed["a"]) { // A, left
+  if (keysPressed["a"]) { // turn left
     scene.getMeshByName("Box").rotation.y -= 0.03;
   }
-  if (keysPressed["d"]) {  // D, right
+  if (keysPressed["d"]) {  // turn right
     scene.getMeshByName("Box").rotation.y += 0.03;
   }
-  if (keysPressed["s"]) {  // S, backward
+  if (keysPressed["s"]) {  // backward
     scene.getMeshByName("Box").translate(BABYLON.Axis.Z, 0.2, BABYLON.Space.LOCAL);
   }
-  if (keysPressed["w"]) {  // W, forward
+  if (keysPressed["w"]) {  // forward
     scene.getMeshByName("Box").translate(BABYLON.Axis.Z, -0.2, BABYLON.Space.LOCAL);
   }
 });
