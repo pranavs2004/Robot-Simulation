@@ -30,6 +30,48 @@ function createScene() {
   camera.attachControl(canvas, true);
   camera.inputs.attached.keyboard.angularSpeed = .002;
   camera.inputs.angularSensibitlity = 1;
+//GUI
+  var plane = BABYLON.Mesh.CreatePlane("plane",2);
+     plane.parent = box;
+     plane.position.y = 12;
+     plane.position.x=6;
+
+     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane);
+
+     var button1 = BABYLON.GUI.Button.CreateImageOnlyButton(
+     "leftArrow",
+     "https://image.flaticon.com/icons/png/512/98/98673.png"
+   );
+     button1.width = 1;
+     button1.height = 0.4;
+     button1.color = "white";
+     button1.fontSize = 50;
+     button1.onPointerUpObservable.add(function() {
+         alert("you did it!");
+     });
+     advancedTexture.addControl(button1);
+
+     /*var plane2 = BABYLON.Mesh.CreatePlane("plane",2);
+        plane.parent = box;
+        plane.position.y = 9;
+        plane.position.x=4;
+        var advancedTexture1 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane2);
+        */
+        var button2 = BABYLON.GUI.Button.CreateImageOnlyButton(
+        "rightArrow",
+        "https://image.flaticon.com/icons/png/512/98/98673.png"
+      );
+        button2.width = 1;
+        button2.height = 0.4;
+        button2.color = "white";
+        button2.fontSize = 50;
+        button2.paddingLeft="50px";
+        button2.onPointerUpObservable.add(function() {
+            alert("you did it!");
+        });
+        //advancedTexture1.addControl(button2);
+
+
 
   return scene;
 };
@@ -75,7 +117,7 @@ document.addEventListener('keyup', (e) => {
   delete keysPressed[e.key];
 });
 
+
 var scene = createScene();
 engine.runRenderLoop( () => {
   scene.render();
-})
