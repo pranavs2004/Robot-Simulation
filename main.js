@@ -11,22 +11,32 @@ function createScene() {
 
   // Meshes
 
-  var box = BABYLON.MeshBuilder.CreateBox("Box", {size: 4.0}, scene);
-  box.position = new BABYLON.Vector3(0, 2, 0)
-  box.scaling = new BABYLON.Vector3(1, 0.3, 1)
+  var boxSize = 6;
+  var box = BABYLON.MeshBuilder.CreateBox("Box", {size: boxSize}, scene);
+  box.position = new BABYLON.Vector3(0, 2, 0);
+  box.scaling = new BABYLON.Vector3(1, 0.1, 1);
   // var box2 = BABYLON.Mesh.CreateBox("Box2", 4.0, scene);
   // box2.position = new BABYLON.Vector3(6, 2, 0);
 
 
+  // var wheelDiameter = 2;
+  // var wheelThickness = 0.5;
+
+  // var frontRightWheel = BABYLON.MeshBuilder.CreateCylinder("FrontRightWheel", {height: wheelThickness, diameter: wheelDiameter, faceColors: new BABYLON.Color3.Black()}, scene);
+  // frontRightWheel.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD); 
+  // frontRightWheel.position = new BABYLON.Vector3(-boxSize/2 - wheelThickness/2, wheelDiameter/2, -boxSize/2 + wheelDiameter/2);
+  
+
   var ball = BABYLON.MeshBuilder.CreateSphere("Ball", {diameter: 3}, scene);
   var material = new BABYLON.StandardMaterial("material1", scene);
   ball.material = material;
-  ball.position = new BABYLON.Vector3(6, 6, 0);
+  ball.position = new BABYLON.Vector3(10, 6, 0);
 
   var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 140, height: 200}, scene);
   material = new BABYLON.StandardMaterial("material1", scene);
   material.diffuseTexture = new BABYLON.Texture("grid.jpg", scene);
   ground.material = material;
+
 
   // Lighting and Shadows
 
@@ -59,11 +69,11 @@ function createScene() {
   camera.lockedTarget = box;
   camera.radius = 20;
   camera.heightOffset = 10;
-  // camera.inputs.attached.keyboard.angularSpeed = .002;
-  // camera.inputs.angularSensibitlity = 1;
+  camera.inputs.attached.keyboard.angularSpeed = .002;
+  camera.inputs.angularSensibitlity = 1;
   camera.lowerBetaLimit = 0.1;
 	camera.upperBetaLimit = (Math.PI / 2) * 0.9;
-	camera.lowerRadiusLimit = 30;
+	camera.lowerRadiusLimit = 10;
 	camera.upperRadiusLimit = 150;
   camera.attachControl(canvas, true);
   
@@ -79,15 +89,7 @@ function createScene() {
   var gz = physicsEngine.gravity.z;
   physicsEngine.setGravity(new BABYLON.Vector3(gx, -9.81, gz));
 
-  // scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
-  // ball.applyGravity = true;
-
-  // scene.collisionsEnabled = true;
-  // ground.checkCollisions = true;
-  // box.checkCollisions = true;
-  // ball.checkCollisions = true;
-
-  box.physicsImpostor.physicsBody.fixedRotation = true;
+  // box.physicsImpostor.physicsBody.fixedRotation = true;
 
 
   //GUI
@@ -158,23 +160,15 @@ engine.runRenderLoop( () => {
   // var contactLocalRefPoint = BABYLON.Vector3.Zero();
 
   if (keysPressed["a"]) { // A, left
-    //box.rotation.y -= 0.03;
-    box.rotate(BABYLON.Axis.Y, -0.07, BABYLON.Space.LOCAL);
-    // var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(box.position.x, 20, box.position.z), -0.07);
-    // box.rotationQuaternion = quaternion;
+    box.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
   }
   if (keysPressed["d"]) {  // D, right
-    // box.rotation.y += 0.03;
-    box.rotate(BABYLON.Axis.Y, 0.07, BABYLON.Space.LOCAL);
-    // var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(box.position.x, 20, box.position.z), 0.07)
-    // box.rotationQuaternion = quaternion;
+    box.rotate(BABYLON.Axis.Y, 0.05, BABYLON.Space.LOCAL);
   }
   if (keysPressed["s"]) {  // S, backward
     box.translate(BABYLON.Axis.Z, 0.2, BABYLON.Space.LOCAL);
-    // box.physicsImpostor.applyForce(new BABYLON.Vector3(0, 0, 1).scale(50), box.getAbsolutePosition().add(contactLocalRefPoint));
   }
   if (keysPressed["w"]) {  // W, forward
     box.translate(BABYLON.Axis.Z, -0.2, BABYLON.Space.LOCAL);
-    // box.physicsImpostor.applyForce(new BABYLON.Vector3(0, 0, -1).scale(50), box.getAbsolutePosition().add(contactLocalRefPoint));
   }
 })
