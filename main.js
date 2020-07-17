@@ -159,13 +159,13 @@ engine.runRenderLoop( () => {
 
   if (keysPressed["a"]) { // A, left
     //box.rotation.y -= 0.03;
-    box.rotate(new BABYLON.Vector3(box.position.x, 1, box.position.z), -0.07, BABYLON.Space.WORLD);
+    box.rotate(BABYLON.Axis.Y, -0.07, BABYLON.Space.LOCAL);
     // var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(box.position.x, 20, box.position.z), -0.07);
     // box.rotationQuaternion = quaternion;
   }
   if (keysPressed["d"]) {  // D, right
     // box.rotation.y += 0.03;
-    box.rotate(new BABYLON.Vector3(box.position.x, 1, box.position.z), 0.07, BABYLON.Space.WORLD);
+    box.rotate(BABYLON.Axis.Y, 0.07, BABYLON.Space.LOCAL);
     // var quaternion = new BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(box.position.x, 20, box.position.z), 0.07)
     // box.rotationQuaternion = quaternion;
   }
