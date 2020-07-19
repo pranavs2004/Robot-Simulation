@@ -41,12 +41,16 @@ function createScene() {
 
   // *****Parameters for convenience*****
   var boxSize = 6;
+  var boxColors = [
+    new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1), 
+    new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1)
+  ];
   var wheelDiameter = 2;
   var wheelThickness = 0.5;
   var wheelColors = [new BABYLON.Color4(0, 0, 0, 1), new BABYLON.Color4(0, 0, 0, 1), new BABYLON.Color4(0, 0, 0, 1)];
   // ************************************
 
-  var box = BABYLON.MeshBuilder.CreateBox("Box", {size: boxSize}, scene);
+  var box = BABYLON.MeshBuilder.CreateBox("Box", {size: boxSize, faceColors: boxColors}, scene);
   box.position = new BABYLON.Vector3(0, 1.4, 0);
   box.scaling = new BABYLON.Vector3(1, 0.1, 1);
 
@@ -77,6 +81,51 @@ function createScene() {
   ballMaterial.bumpTexture = new BABYLON.Texture("assets/soccer_normal.png", scene);
   ball.material = ballMaterial;
   ball.position = new BABYLON.Vector3(10, 6, 0);
+
+
+  // Goalposts
+
+  //*****Parameters for convenience*****
+  var goalWidth = 30;
+  var goalLength = 7.5;
+  var goalHeight = 15;
+  var barSize = 1;
+  //************************************
+
+  var mat1 = new BABYLON.StandardMaterial('mat1', scene);
+  mat1.diffuseColor = new BABYLON.Color3(0, 0, 0)
+
+  var base = BABYLON.MeshBuilder.CreateBox("base", { size: barSize, width: goalWidth }, scene);
+  base.position = new BABYLON.Vector3(0, barSize, 0);
+  base.material = mat1;
+
+  var hbar = BABYLON.MeshBuilder.CreateBox("hbar", { size: barSize, width: goalWidth }, scene);
+  hbar.position = new BABYLON.Vector3(0, goalHeight - barSize/2, -goalLength + barSize);
+  hbar.material = mat1;
+
+  var vbar1 = BABYLON.MeshBuilder.CreateBox("vbar1", { size: barSize, height: goalHeight-1 }, scene);
+  vbar1.position = new BABYLON.Vector3(-goalWidth/2 + barSize/2, goalHeight/2 - barSize/2, -goalLength + barSize);
+  vbar1.material = mat1;
+
+  var vbar2 = BABYLON.MeshBuilder.CreateBox("vbar2", { size: barSize, height: goalHeight-1 }, scene);
+  vbar2.position = new BABYLON.Vector3(goalWidth/2 - barSize/2, goalHeight/2 - barSize/2, -goalLength + barSize);
+  vbar2.material = mat1;
+
+  var c1 = BABYLON.MeshBuilder.CreateBox("c1", { size: barSize, depth: goalLength}, scene);
+  c1.position = new BABYLON.Vector3(goalWidth/2 - barSize/2, 0, -goalLength/2 + barSize/2);
+  c1.material = mat1;
+
+  var c2 = BABYLON.MeshBuilder.CreateBox("c2", { size: barSize, depth: goalLength}, scene);
+  c2.position = new BABYLON.Vector3(-goalWidth/2 + barSize/2, 0, -goalLength/2 + barSize/2);
+  c2.material = mat1;
+
+
+  var goalpost1 = BABYLON.Mesh.MergeMeshes([base, hbar, vbar1, vbar2, c1, c2]);
+  goalpost1.position = new BABYLON.Vector3(0, barSize/2, roomLength/2 - 10);
+
+  var goalpost2 = goalpost1.createInstance("goalpost2");
+  goalpost2.position = new BABYLON.Vector3(0, barSize/2, -roomLength/2 + 10);
+  goalpost2.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.WORLD);
 
 
 
@@ -113,7 +162,7 @@ function createScene() {
   var camera = new BABYLON.FollowCamera("Camera", box.position, scene);
   camera.lockedTarget = box;
   camera.radius = 20;
-  camera.heightOffset = 10;
+  camera.heightOffset = 7;
   camera.inputs.attached.keyboard.angularSpeed = .002;
   camera.inputs.angularSensibitlity = 1;
   camera.lowerBetaLimit = 0.1;
@@ -127,9 +176,9 @@ function createScene() {
   // Physics---------------------------------------------------------
 
   scene.enablePhysics(null, new BABYLON.CannonJSPlugin());
-  ball.physicsImpostor = new BABYLON.PhysicsImpostor(ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 1, restitution: 0.3 }, scene);
+  ball.physicsImpostor = new BABYLON.PhysicsImpostor(ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0.7, restitution: 0.3 }, scene);
   ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.2, restitution: 0.7 }, scene);
-  box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 6, friction: 0.0, restitution: 0.0 }, scene);
+  box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 6, friction: 0.5, restitution: 0.0 }, scene);
   // frontRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
   // frontLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
   // backRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
@@ -232,8 +281,6 @@ function createScene() {
 
   return scene;
 };
-
-
 
 
 
