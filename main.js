@@ -48,31 +48,41 @@ function createScene() {
   var wheelDiameter = 2;
   var wheelThickness = 0.5;
   var wheelColors = [new BABYLON.Color4(0, 0, 0, 1), new BABYLON.Color4(0, 0, 0, 1), new BABYLON.Color4(0, 0, 0, 1)];
+  var wheelY = -1;
   // ************************************
 
-  var box = BABYLON.MeshBuilder.CreateBox("Box", {size: boxSize, faceColors: boxColors}, scene);
-  box.position = new BABYLON.Vector3(0, 1.4, 0);
-  box.scaling = new BABYLON.Vector3(1, 0.1, 1);
+  var box = BABYLON.MeshBuilder.CreateBox("Box", {size: boxSize, faceColors: boxColors, height: 2}, scene);
+  box.position = new BABYLON.Vector3(0, 1.5, 0);
+
+  var frontRod = BABYLON.MeshBuilder.CreateCylinder("FrontRod", {height: boxSize+0.4, diameter: 0.5}, scene);
+  frontRod.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  frontRod.position = new BABYLON.Vector3(0, wheelY, -boxSize/2 + wheelDiameter/2);
+  frontRod.parent = box;
+
+  var backRod = BABYLON.MeshBuilder.CreateCylinder("BackRod", {height: boxSize+0.4, diameter: 0.5}, scene);
+  backRod.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  backRod.position = new BABYLON.Vector3(0, wheelY, boxSize/2 - wheelDiameter/2);
+  backRod.parent = box;
 
   var frontRightWheel = BABYLON.MeshBuilder.CreateCylinder("FrontRightWheel", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors }, scene);
   frontRightWheel.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD); 
-  frontRightWheel.position = new BABYLON.Vector3(-boxSize/2 - wheelThickness/2, wheelDiameter/2, -boxSize/2 + wheelDiameter/2);
-  frontRightWheel.setParent(box);
+  frontRightWheel.position = new BABYLON.Vector3(-boxSize/2 - wheelThickness/2 - 0.2, wheelY, -boxSize/2 + wheelDiameter/2);
+  frontRightWheel.parent = box;
   
   var frontLeftWheel = BABYLON.MeshBuilder.CreateCylinder("FrontLeftWheel", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors}, scene);
   frontLeftWheel.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD); 
-  frontLeftWheel.position = new BABYLON.Vector3(boxSize/2 + wheelThickness/2, wheelDiameter/2, -boxSize/2 + wheelDiameter/2);
-  frontLeftWheel.setParent(box);
+  frontLeftWheel.position = new BABYLON.Vector3(boxSize/2 + wheelThickness/2 + 0.2, wheelY, -boxSize/2 + wheelDiameter/2);
+  frontLeftWheel.parent = box;
 
   var backRightWheel = BABYLON.MeshBuilder.CreateCylinder("BackRightWheel", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors}, scene);
   backRightWheel.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD); 
-  backRightWheel.position = new BABYLON.Vector3(-boxSize/2 - wheelThickness/2, wheelDiameter/2, boxSize/2 - wheelDiameter/2);
-  backRightWheel.setParent(box);
+  backRightWheel.position = new BABYLON.Vector3(-boxSize/2 - wheelThickness/2 - 0.2, wheelY, boxSize/2 - wheelDiameter/2);
+  backRightWheel.parent = box;
 
   var backLeftWheel = BABYLON.MeshBuilder.CreateCylinder("BackLeftWheel", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors}, scene);
   backLeftWheel.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD); 
-  backLeftWheel.position = new BABYLON.Vector3(boxSize/2 + wheelThickness/2, wheelDiameter/2, boxSize/2 - wheelDiameter/2);
-  backLeftWheel.setParent(box);
+  backLeftWheel.position = new BABYLON.Vector3(boxSize/2 + wheelThickness/2 + 0.2, wheelY, boxSize/2 - wheelDiameter/2);
+  backLeftWheel.parent = box;
   
   // Ball
   var ball = BABYLON.MeshBuilder.CreateSphere("Ball", {diameter: 3}, scene);
@@ -176,18 +186,30 @@ function createScene() {
   // Physics---------------------------------------------------------
 
   scene.enablePhysics(null, new BABYLON.CannonJSPlugin());
+
   ball.physicsImpostor = new BABYLON.PhysicsImpostor(ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0.7, restitution: 0.3 }, scene);
   ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.2, restitution: 0.7 }, scene);
+  frontRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
+  frontLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
+  backRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
+  backLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
   box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 6, friction: 0.5, restitution: 0.0 }, scene);
-  // frontRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  // frontLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  // backRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  // backLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-
+  goalpost1.physicsImpostor = new BABYLON.PhysicsImpostor(goalpost1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 20, friction: 100, restitution: 0 }, scene);
+  goalpost2.physicsImpostor = new BABYLON.PhysicsImpostor(goalpost2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 20, friction: 100, restitution: 0 }, scene);
   rightWall.physicsImpostor = new BABYLON.PhysicsImpostor(rightWall, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
   leftWall.physicsImpostor = new BABYLON.PhysicsImpostor(leftWall, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
   frontWall.physicsImpostor = new BABYLON.PhysicsImpostor(frontWall, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
   backWall.physicsImpostor = new BABYLON.PhysicsImpostor(backWall, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+
+  // var joint1 = new BABYLON.HingeJoint({  
+  //   mainPivot: new BABYLON.Vector3(-boxSize/2 - wheelThickness/2 - 0.2, box.position.y, -boxSize/2 + wheelDiameter/2),
+  //   connectedPivot: new BABYLON.Vector3(0, 0, 0),
+  //   mainAxis: new BABYLON.Vector3(0, 0, -1),
+  //   connectedAxis: new BABYLON.Vector3(0, 0, -1),
+  //   nativeParams: {
+  //   }
+  // });
+  // box.physicsImpostor.addJoint(frontRightWheel.physicsImpostor, joint1); 
 
   // box.physicsImpostor.physicsBody.fixedRotation = true;
 
@@ -239,45 +261,45 @@ function createScene() {
 
   // GUI---------------------------------------------------------
 
-  var plane = BABYLON.Mesh.CreatePlane("plane",2);
-  plane.parent = box;
-  plane.position.y = 12;
-  plane.position.x=6;
+//   var plane = BABYLON.Mesh.CreatePlane("plane",2);
+//   plane.parent = box;
+//   plane.position.y = 12;
+//   plane.position.x=6;
 
-  var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane);
+//   var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane);
 
-  var button1 = BABYLON.GUI.Button.CreateImageOnlyButton(
-    "leftArrow",
-    "https://image.flaticon.com/icons/png/512/98/98673.png"
-  );
-  button1.width = 1;
-  button1.height = 0.4;
-  button1.color = "white";
-  button1.fontSize = 50;
-  button1.onPointerUpObservable.add(function() {
-      alert("you did it!");
-  });
-  advancedTexture.addControl(button1);
+//   var button1 = BABYLON.GUI.Button.CreateImageOnlyButton(
+//     "leftArrow",
+//     "https://image.flaticon.com/icons/png/512/98/98673.png"
+//   );
+//   button1.width = 1;
+//   button1.height = 0.4;
+//   button1.color = "white";
+//   button1.fontSize = 50;
+//   button1.onPointerUpObservable.add(function() {
+//       alert("you did it!");
+//   });
+//   advancedTexture.addControl(button1);
 
-/*var plane2 = BABYLON.Mesh.CreatePlane("plane",2);
-  plane.parent = box;
-  plane.position.y = 9;
-  plane.position.x=4;
-  var advancedTexture1 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane2);
-*/
-  var button2 = BABYLON.GUI.Button.CreateImageOnlyButton(
-    "rightArrow",
-    "https://image.flaticon.com/icons/png/512/98/98673.png"
-  );
-  button2.width = 1;
-  button2.height = 0.4;
-  button2.color = "white";
-  button2.fontSize = 50;
-  button2.paddingLeft="50px";
-  button2.onPointerUpObservable.add(function() {
-      alert("you did it!");
-  });
-  //advancedTexture1.addControl(button2);
+// /*var plane2 = BABYLON.Mesh.CreatePlane("plane",2);
+//   plane.parent = box;
+//   plane.position.y = 9;
+//   plane.position.x=4;
+//   var advancedTexture1 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane2);
+// */
+//   var button2 = BABYLON.GUI.Button.CreateImageOnlyButton(
+//     "rightArrow",
+//     "https://image.flaticon.com/icons/png/512/98/98673.png"
+//   );
+//   button2.width = 1;
+//   button2.height = 0.4;
+//   button2.color = "white";
+//   button2.fontSize = 50;
+//   button2.paddingLeft="50px";
+//   button2.onPointerUpObservable.add(function() {
+//       alert("you did it!");
+//   });
+//   //advancedTexture1.addControl(button2);
 
   return scene;
 };
