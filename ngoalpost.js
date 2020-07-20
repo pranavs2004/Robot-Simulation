@@ -28,7 +28,7 @@
 
 //     var base = BABYLON.MeshBuilder.CreateBox("base", { size: 1, width: 6 }, scene);
 //     base.position = new BABYLON.Vector3(0, 1.5, 0);
-//     base.material = mat1;
+//     base.material = mat2;
 
 //     var hbar = BABYLON.MeshBuilder.CreateBox("hbar", { size: 1, height: 1, width: 6 }, scene);
 //     hbar.position = new BABYLON.Vector3(0, 3.5, -2);
