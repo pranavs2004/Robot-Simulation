@@ -293,7 +293,7 @@ function createScene() {
   frontLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
   backRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
   backLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 10, friction: 0.5, restitution: 0.0 }, scene);
+  box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 10000, friction: 0.5, restitution: 0.0 }, scene);
   
   var goal1Components = [netRight, netLeft, netBack, hbar, vbar1, vbar2, c1, c2, base];
   for (var i = 3; i < goal1Components.length; i++) {
