@@ -66,7 +66,7 @@ function createScene() {
   // ************************************
 
   var box = BABYLON.MeshBuilder.CreateBox("Box", {size: boxSize, faceColors: boxColors, height: 2}, scene);
-  box.position = new BABYLON.Vector3(0, 1.5, 0);
+  box.position = new BABYLON.Vector3(0, 2, 0);
 
   var frontRod = BABYLON.MeshBuilder.CreateCylinder("FrontRod", {height: boxSize+0.4, diameter: 0.5}, scene);
   frontRod.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
@@ -324,16 +324,101 @@ function createScene() {
 
 
 
-  // Keyboard Controls + Goal scoring
+  // GUI---------------------------------------------------------
 
-  function resetBoxPhysics() {
-    if ( !(box.intersectsMesh(frontWall, false) || box.intersectsMesh(backWall, false) ||
-          box.intersectsMesh(rightWall, false) || box.intersectsMesh(leftWall, false) ) )
-    {
-      box.physicsImpostor.sleep();
-      box.physicsImpostor.wakeUp();
-    }
-  }
+  //   var plane = BABYLON.Mesh.CreatePlane("plane",2);
+  //   plane.parent = box;
+  //   plane.position.y = 12;
+  //   plane.position.x=6;
+
+  var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+  // Directional Movement Buttons
+
+  var buttonsPressed = {};
+
+  //Right Button
+  var rightButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+    "rightArrow",
+    "https://image.flaticon.com/icons/png/512/98/98673.png"
+  );
+  //button1.position = new BABYLON.Vector3(0, 200, 100);
+  rightButton.left="450px";
+  rightButton.top="-250px";
+  rightButton.width = "150px"
+  rightButton.height = "40px";
+  rightButton.color = "white";
+  rightButton.fontSize = 20;
+  advancedTexture.addControl(rightButton);
+
+  //Left Button
+  var leftButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+    "leftButton",
+    "https://image.flaticon.com/icons/png/512/24/24047.png"
+  );
+  //button1.position = new BABYLON.Vector3(0, 200, 100);
+  leftButton.left="250px";
+  leftButton.top="-250px";
+  leftButton.width = "150px"
+  leftButton.height = "40px";
+  leftButton.color = "white";
+  leftButton.fontSize = 20;
+  advancedTexture.addControl(leftButton);
+
+  //Up Arrow
+  var upButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+    "upButton",
+    "https://image.flaticon.com/icons/png/512/24/24140.png"
+  );
+  //button1.position = new BABYLON.Vector3(0, 200, 100);
+  upButton.left="350px";
+  upButton.top="-320px";
+  upButton.width = "150px"
+  upButton.height = "40px";
+  upButton.color = "white";
+  upButton.fontSize = 20;
+  advancedTexture.addControl(upButton);
+
+  //Down Arrow
+  var downButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+        "downButton",
+    "https://image.flaticon.com/icons/png/512/23/23650.png"
+  )
+  //button1.position = new BABYLON.Vector3(0, 200, 100);
+  downButton.left="350px";
+  downButton.top="-180px";
+  downButton.width = "150px"
+  downButton.height = "40px";
+  downButton.color = "white";
+  downButton.fontSize = 20;
+  advancedTexture.addControl(downButton);
+
+// /*var plane2 = BABYLON.Mesh.CreatePlane("plane",2);
+//   plane.parent = box;
+//   plane.position.y = 9;
+//   plane.position.x=4;
+//   var advancedTexture1 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane2);
+// */
+//   var button2 = BABYLON.GUI.Button.CreateImageOnlyButton(
+//     "rightArrow",
+//     "https://image.flaticon.com/icons/png/512/98/98673.png"
+//   );
+//   button2.width = 1;
+//   button2.height = 0.4;
+//   button2.color = "white";
+//   button2.fontSize = 50;
+//   button2.paddingLeft="50px";
+//   button2.onPointerUpObservable.add(function() {
+//       alert("you did it!");
+//   });
+//   //advancedTexture1.addControl(button2);
+
+
+
+  // Detect updates in state------------------------------------------------------
+
+
+  // Keyboard Controls
 
   keysPressed = {};
 
@@ -347,25 +432,73 @@ function createScene() {
     keysPressed[e.key] = (e.type == "keydown");
   });
 
+
+  // Button Controls
+
+  buttonsPressed = {};
+
+  rightButton.onPointerDownObservable.add(function() {
+    buttonsPressed["right"] = true;
+  });
+  rightButton.onPointerUpObservable.add(function() {
+    buttonsPressed["right"] = false;
+  });
+
+  leftButton.onPointerDownObservable.add(function() {
+    buttonsPressed["left"] = true;
+  });
+  leftButton.onPointerUpObservable.add(function() {
+    buttonsPressed["left"] = false;
+  });
+
+  upButton.onPointerDownObservable.add(function() {
+    buttonsPressed["up"] = true;
+  });
+  upButton.onPointerUpObservable.add(function() {
+    buttonsPressed["up"] = false;
+  });
+
+  downButton.onPointerDownObservable.add(function() {
+    buttonsPressed["down"] = true;
+  });
+  downButton.onPointerUpObservable.add(function() {
+    buttonsPressed["down"] = false;
+  });
+
+
+  // Misc.
+
+  function resetBoxPhysics() {
+    if ( !(box.intersectsMesh(frontWall, false) || box.intersectsMesh(backWall, false) ||
+          box.intersectsMesh(rightWall, false) || box.intersectsMesh(leftWall, false) ) )
+    {
+      box.physicsImpostor.sleep();
+      box.physicsImpostor.wakeUp();
+    }
+  }
   var recordedScore = false;
   var score = 0;
+
+
+  // Detect change in state before every frame
 
   scene.registerBeforeRender( () => {
 
     // Robot Movement
-    if (keysPressed["a"]) { // A, left
+
+    if (keysPressed["a"] || buttonsPressed["left"]) { // A, left
       resetBoxPhysics();
       box.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
     }
-    if (keysPressed["d"]) {  // D, right
+    if (keysPressed["d"] || buttonsPressed["right"]) {  // D, right
       resetBoxPhysics();
       box.rotate(BABYLON.Axis.Y, 0.05, BABYLON.Space.LOCAL);
     }
-    if (keysPressed["s"]) {  // S, backward
+    if (keysPressed["s"] || buttonsPressed["down"]) {  // S, backward
       resetBoxPhysics();
       box.translate(BABYLON.Axis.Z, 0.3, BABYLON.Space.LOCAL);
     }
-    if (keysPressed["w"]) {  // W, forward
+    if (keysPressed["w"] || buttonsPressed["up"]) {  // W, forward
       resetBoxPhysics();
       box.translate(BABYLON.Axis.Z, -0.3, BABYLON.Space.LOCAL);
     }
@@ -402,109 +535,6 @@ function createScene() {
 
   });
 
-
-
-  // GUI---------------------------------------------------------
-
-//   var plane = BABYLON.Mesh.CreatePlane("plane",2);
-//   plane.parent = box;
-//   plane.position.y = 12;
-//   plane.position.x=6;
-
-var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-//Right Button
-  var rightButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-       "rightArrow",
-   "https://image.flaticon.com/icons/png/512/98/98673.png"
-   );
-   //button1.position = new BABYLON.Vector3(0, 200, 100);
-   rightButton.left="450px";
-   rightButton.top="-250px";
-   rightButton.width = "150px"
-   rightButton.height = "40px";
-  rightButton.color = "white";
-  rightButton.fontSize = 20;
-
-  rightButton.onPointerUpObservable.add(function() {
-    resetBoxPhysics();
-    box.rotate(BABYLON.Axis.Y, 0.05, BABYLON.Space.LOCAL);
-   });
-     advancedTexture.addControl(rightButton);
-     //Left Button
-
-     var leftButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-          "leftButton",
-      "https://image.flaticon.com/icons/png/512/24/24047.png"
-      );
-      //button1.position = new BABYLON.Vector3(0, 200, 100);
-      leftButton.left="250px";
-      leftButton.top="-250px";
-      leftButton.width = "150px"
-      leftButton.height = "40px";
-     leftButton.color = "white";
-     leftButton.fontSize = 20;
-
-     leftButton.onPointerUpObservable.add(function() {
-       resetBoxPhysics();
-       box.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
-      });
-       advancedTexture.addControl(leftButton);
-       //Up Arrow
-       var upButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-            "upButton",
-        "https://image.flaticon.com/icons/png/512/24/24140.png"
-        );
-        //button1.position = new BABYLON.Vector3(0, 200, 100);
-        upButton.left="350px";
-        upButton.top="-320px";
-        upButton.width = "150px"
-        upButton.height = "40px";
-       upButton.color = "white";
-       upButton.fontSize = 20;
-
-       upButton.onPointerDownObservable.add(function() {
-         resetBoxPhysics();
-         box.translate(BABYLON.Axis.Z, -0.3, BABYLON.Space.LOCAL);
-        });
-         advancedTexture.addControl(upButton);
-         //Down Arrow
-         var downButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-              "downButton",
-          "https://image.flaticon.com/icons/png/512/23/23650.png"
-        )
-          //button1.position = new BABYLON.Vector3(0, 200, 100);
-          downButton.left="350px";
-          downButton.top="-180px";
-          downButton.width = "150px"
-          downButton.height = "40px";
-         downButton.color = "white";
-         downButton.fontSize = 20;
-
-         downButton.onPointerUpObservable.add(function() {
-           resetBoxPhysics();
-           box.translate(BABYLON.Axis.Z, 0.3, BABYLON.Space.LOCAL);
-          });
-           advancedTexture.addControl(downButton);
-
-// /*var plane2 = BABYLON.Mesh.CreatePlane("plane",2);
-//   plane.parent = box;
-//   plane.position.y = 9;
-//   plane.position.x=4;
-//   var advancedTexture1 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane2);
-// */
-//   var button2 = BABYLON.GUI.Button.CreateImageOnlyButton(
-//     "rightArrow",
-//     "https://image.flaticon.com/icons/png/512/98/98673.png"
-//   );
-//   button2.width = 1;
-//   button2.height = 0.4;
-//   button2.color = "white";
-//   button2.fontSize = 50;
-//   button2.paddingLeft="50px";
-//   button2.onPointerUpObservable.add(function() {
-//       alert("you did it!");
-//   });
-//   //advancedTexture1.addControl(button2);
 
   return scene;
 };
