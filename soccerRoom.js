@@ -104,7 +104,7 @@ function createScene() {
   ballMaterial.diffuseTexture = new BABYLON.Texture("assets/soccer_texture.jpg", scene);
   ballMaterial.bumpTexture = new BABYLON.Texture("assets/soccer_normal.png", scene);
   ball.material = ballMaterial;
-  ball.position = new BABYLON.Vector3(0, 6,  20);
+  ball.position = new BABYLON.Vector3(0, 6, -10);
 
 
   // Goalposts
@@ -342,7 +342,6 @@ function createScene() {
     "rightArrow",
     "https://image.flaticon.com/icons/png/512/98/98673.png"
   );
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
   rightButton.left="450px";
   rightButton.top="-250px";
   rightButton.width = "150px"
@@ -356,7 +355,6 @@ function createScene() {
     "leftButton",
     "https://image.flaticon.com/icons/png/512/24/24047.png"
   );
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
   leftButton.left="250px";
   leftButton.top="-250px";
   leftButton.width = "150px"
@@ -370,7 +368,6 @@ function createScene() {
     "upButton",
     "https://image.flaticon.com/icons/png/512/24/24140.png"
   );
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
   upButton.left="350px";
   upButton.top="-320px";
   upButton.width = "150px"
@@ -381,10 +378,9 @@ function createScene() {
 
   //Down Arrow
   var downButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-        "downButton",
+    "downButton",
     "https://image.flaticon.com/icons/png/512/23/23650.png"
   )
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
   downButton.left="350px";
   downButton.top="-180px";
   downButton.width = "150px"
@@ -392,6 +388,14 @@ function createScene() {
   downButton.color = "white";
   downButton.fontSize = 20;
   advancedTexture.addControl(downButton);
+
+  var winText = new BABYLON.GUI.TextBlock();
+  winText.text = "You Win";
+  winText.color = "white";
+  winText.fontSize = 50;
+  winText.fontFamily = "monospace";
+  winText.isVisible = false;
+  advancedTexture.addControl(winText); 
 
 // /*var plane2 = BABYLON.Mesh.CreatePlane("plane",2);
 //   plane.parent = box;
@@ -484,52 +488,63 @@ function createScene() {
 
   scene.registerBeforeRender( () => {
 
-    // Robot Movement
+    // Only allow movement and other game logic before game is over
+    // Game over after score is 10
 
-    if (keysPressed["a"] || buttonsPressed["left"]) { // A, left
-      resetBoxPhysics();
-      box.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
-    }
-    if (keysPressed["d"] || buttonsPressed["right"]) {  // D, right
-      resetBoxPhysics();
-      box.rotate(BABYLON.Axis.Y, 0.05, BABYLON.Space.LOCAL);
-    }
-    if (keysPressed["s"] || buttonsPressed["down"]) {  // S, backward
-      resetBoxPhysics();
-      box.translate(BABYLON.Axis.Z, 0.3, BABYLON.Space.LOCAL);
-    }
-    if (keysPressed["w"] || buttonsPressed["up"]) {  // W, forward
-      resetBoxPhysics();
-      box.translate(BABYLON.Axis.Z, -0.3, BABYLON.Space.LOCAL);
-    }
-
-
-    // Scoring a goal
-
-    if (ball.intersectsMesh(netBack, true) || ball.intersectsMesh(netRight, true) || ball.intersectsMesh(netLeft, true) ||
-        ball.intersectsMesh(netBack2, true) || ball.intersectsMesh(netRight2, true) || ball.intersectsMesh(netLeft2, true)) {
-      ball.physicsImpostor.sleep();
-      ball.physicsImpostor.wakeUp();
-
-      if (!recordedScore) {
-        score++;
-        recordedScore = true;
-        console.log(score);
+    if (score < 10) {
+      
+      // Robot Movement
+      if (keysPressed["a"] || buttonsPressed["left"]) { // A, left
+        resetBoxPhysics();
+        box.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
+      }
+      if (keysPressed["d"] || buttonsPressed["right"]) {  // D, right
+        resetBoxPhysics();
+        box.rotate(BABYLON.Axis.Y, 0.05, BABYLON.Space.LOCAL);
+      }
+      if (keysPressed["s"] || buttonsPressed["down"]) {  // S, backward
+        resetBoxPhysics();
+        box.translate(BABYLON.Axis.Z, 0.3, BABYLON.Space.LOCAL);
+      }
+      if (keysPressed["w"] || buttonsPressed["up"]) {  // W, forward
+        resetBoxPhysics();
+        box.translate(BABYLON.Axis.Z, -0.3, BABYLON.Space.LOCAL);
       }
 
-      ball.position = new BABYLON.Vector3(0, 4, 0);
+
+      // Scoring a goal
+
+      if (ball.intersectsMesh(netBack, true) || ball.intersectsMesh(netRight, true) || ball.intersectsMesh(netLeft, true) ||
+          ball.intersectsMesh(netBack2, true) || ball.intersectsMesh(netRight2, true) || ball.intersectsMesh(netLeft2, true)) {
+        ball.physicsImpostor.sleep();
+        ball.physicsImpostor.wakeUp();
+
+        if (!recordedScore) {
+          score++;
+          recordedScore = true;
+          console.log(score);
+        }
+
+        ball.position = new BABYLON.Vector3(0, 2, 4);
+      }
+      else {
+        recordedScore = false;
+      }
+
+
+      // When ball is out of bounds, put it back at center of field
+
+      if (!(ball.intersectsMesh(field, true) || ball.intersectsMesh(goalArea1, true) || ball.intersectsMesh(goalArea2, true)) &&
+            ball.position.y <= 1.5 )
+      {
+        ball.physicsImpostor.sleep();
+        ball.physicsImpostor.wakeUp();
+
+        ball.position = new BABYLON.Vector3(0, 2, 4);
+      }
     }
     else {
-      recordedScore = false;
-    }
-
-    // When ball is out of bounds, put it back at center of field
-
-    if (!(ball.intersectsMesh(field, true) || ball.intersectsMesh(goalArea1, true) || ball.intersectsMesh(goalArea2, true)) &&
-          ball.position.y <= 1.5 )
-    {
-      ball.physicsImpostor.sleep();
-      ball.physicsImpostor.wakeUp();
+      winText.isVisible = true;
     }
 
   });
