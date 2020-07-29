@@ -25,8 +25,8 @@
         font-family: "Recursive";
         font-size: 25px;
       }
-      #startButton {
-        padding-left:15px;
+      .button {
+        padding: 5px 10px 5px 10px;
         margin-right: 4%;
         margin-left: 4%;
         font-family: "Recursive", sans-serif;
@@ -37,7 +37,7 @@
         /* border: 1px solid aliceblue; */
       }
 
-      #startButton:hover {
+      .button:hover {
         transition: 0.5s;
         background-color: aliceblue;
         color: black;
@@ -58,9 +58,8 @@
   <body>
     <div id="UIBar">
       <h4 id="title">Practice Room</h4>
-      <a href="practiceRoom.html" id="startButton">START/RESTART</a>
-      <a id="startButton" href="soccerRoom.html">Go TO MAIN ROOM</a>
-      <h4 class="switcher" id="title">SPEED SOCCER</h4>
+      <a href="practiceRoom.html" class="button">START/RESTART</a>
+      <a href="soccerRoom.html" class="button">Go TO MAIN ROOM</a>
       <p>scroll down to hide this bar</p>
     </div>
     <canvas id="canvas"></canvas>

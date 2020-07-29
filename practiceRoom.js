@@ -256,66 +256,71 @@ function createScene() {
   //   plane.position.x=6;
 
   var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+// Directional Movement Buttons
 
-  // Directional Movement Buttons
+var buttonSize = 80;
+var buttonSetX = canvas.width/2 - buttonSize*3;
+var buttonSetY = canvas.height/2 - buttonSize*2;
 
-  var buttonsPressed = {};
+//Right Button
+var rightButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+  "rightArrow",
+  "assets/rightArrow.png"
+);
+rightButton.left = buttonSetX + buttonSize * 2 + "px";
+rightButton.top = buttonSetY +"px";
+rightButton.width = buttonSize + "px";
+rightButton.height = buttonSize + "px";
+rightButton.thickness = 0;
+advancedTexture.addControl(rightButton);
 
-  //Right Button
-  var rightButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-    "rightArrow",
-    "https://image.flaticon.com/icons/png/512/98/98673.png"
-  );
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
-  rightButton.left="450px";
-  rightButton.top="-250px";
-  rightButton.width = "150px"
-  rightButton.height = "40px";
-  rightButton.color = "white";
-  rightButton.fontSize = 20;
-  advancedTexture.addControl(rightButton);
+//Left Button
+var leftButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+  "leftButton",
+  "assets/leftArrow.png"
+);
+leftButton.left = buttonSetX + "px";
+leftButton.top = buttonSetY + "px";
+leftButton.width = buttonSize + "px";
+leftButton.height = buttonSize + "px";
+leftButton.thickness = 0;
+advancedTexture.addControl(leftButton);
 
-  //Left Button
-  var leftButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-    "leftButton",
-    "https://image.flaticon.com/icons/png/512/24/24047.png"
-  );
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
-  leftButton.left="250px";
-  leftButton.top="-250px";
-  leftButton.width = "150px"
-  leftButton.height = "40px";
-  leftButton.color = "white";
-  leftButton.fontSize = 20;
-  advancedTexture.addControl(leftButton);
+//Up Arrow
+var upButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+  "upButton",
+  "assets/upArrow.png"
+);
+upButton.left = buttonSetX + buttonSize + "px";
+upButton.top = buttonSetY - buttonSize + "px";
+upButton.width = buttonSize + "px";
+upButton.height = buttonSize + "px";
+upButton.thickness = 0;
+advancedTexture.addControl(upButton);
 
-  //Up Arrow
-  var upButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-    "upButton",
-    "https://image.flaticon.com/icons/png/512/24/24140.png"
-  );
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
-  upButton.left="350px";
-  upButton.top="-320px";
-  upButton.width = "150px"
-  upButton.height = "40px";
-  upButton.color = "white";
-  upButton.fontSize = 20;
-  advancedTexture.addControl(upButton);
+//Down Arrow
+var downButton = BABYLON.GUI.Button.CreateImageOnlyButton(
+  "downButton",
+  "assets/downArrow.png"
+)
+downButton.left = buttonSetX + buttonSize + "px";
+downButton.top = buttonSetY + buttonSize + "px";
+downButton.width = buttonSize + "px";
+downButton.height = buttonSize + "px";
+downButton.thickness = 0;
+advancedTexture.addControl(downButton);
 
-  //Down Arrow
-  var downButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-        "downButton",
-    "https://image.flaticon.com/icons/png/512/23/23650.png"
-  )
-  //button1.position = new BABYLON.Vector3(0, 200, 100);
-  downButton.left="350px";
-  downButton.top="-180px";
-  downButton.width = "150px"
-  downButton.height = "40px";
-  downButton.color = "white";
-  downButton.fontSize = 20;
-  advancedTexture.addControl(downButton);
+var dot = BABYLON.GUI.Button.CreateImageOnlyButton(
+  "dot",
+  "assets/dot.png"
+)
+dot.left = buttonSetX + buttonSize + "px";
+dot.top = buttonSetY + "px";
+dot.width = buttonSize + "px";
+dot.height = buttonSize + "px";
+dot.thickness = 0;
+advancedTexture.addControl(dot);
+
 
 // /*var plane2 = BABYLON.Mesh.CreatePlane("plane",2);
 //   plane.parent = box;
