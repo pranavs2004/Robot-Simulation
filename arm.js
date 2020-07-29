@@ -4,10 +4,8 @@ var createScene = function () {
     var scene = new BABYLON.Scene(engine);
 
     // This creates and positions a free camera (non-mesh)
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-    // This targets the camera to scene origin
-    camera.setTarget(BABYLON.Vector3.Zero());
-    // This attaches the camera to the canvas
+    var camera = new BABYLON.ArcRotateCamera("camera1", 0, 0, 0, new BABYLON.Vector3(5, 3, 0), scene);
+    camera.setPosition(new BABYLON.Vector3(14, 8, -12));
     camera.attachControl(canvas, true);
 
     // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
@@ -21,10 +19,6 @@ var createScene = function () {
     // Materials
     
     var mat1 = new BABYLON.StandardMaterial('mat1', scene);
-    mat1.diffuseColor = new BABYLON.Color3(0, 1, 0);
-
-    var mat2 = new BABYLON.StandardMaterial('mat2', scene);
-    mat2.diffuseColor = new BABYLON.Color4(0.55, 0.25, 0.2);
 
     var armbase1 = BABYLON.MeshBuilder.CreateBox("armbase1", { size: 1, height:3 }, scene);
     armbase1.position = new BABYLON.Vector3(1, 1.5, 0);
@@ -42,12 +36,12 @@ var createScene = function () {
     mArm.position = new BABYLON.Vector3(0, 2.625, -1.75);
     mArm.material = mat1;
 
-    /*scene.registerBeforeRender(function () {
+    scene.registerBeforeRender(function () {
         mArm.rotation.x += 0.01;
-    });*/
+    });
 
-    var axis = new BABYLON.Vector3(2, 0, 0);
-    var axisLine = BABYLON.Mesh.CreateLines("axis", [axis.scale(-5), axis.scale(5)], scene);
+    var axis = new BABYLON.Vector3(10, 0, 0);
+    //var axisLine = BABYLON.Mesh.CreateLines("axis", [axis.scale(-5), axis.scale(5)], scene);
     axis.normalize();
     var theta = Math.PI / 8;
     var quaternion = new BABYLON.Quaternion.RotationAxis(axis, theta);
