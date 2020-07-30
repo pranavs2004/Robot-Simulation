@@ -1,8 +1,23 @@
-var canvas = document.getElementById("canvas");
-var engine = new BABYLON.Engine(canvas, true);
+var bar = document.getElementById("UIBar");
+bar.width = window.innerWidth;
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+var canvasRight = document.getElementById("canvasRight");
+canvasRight.width = window.innerWidth;
+canvasRight.height = window.innerHeight;
+
+// var canvasLeft = document.getElementById("canvasLeft");
+// canvasLeft.width = window.innerWidth/2 - 1;
+// canvasLeft.height = window.innerHeight;
+
+// var canvas = document.getElementById("canvas");
+// canvas.width = 100;
+// canvas.length = 100;
+
+var engine = new BABYLON.Engine(document.getElementById("canvasRight"), true);
+
+// Set the default canvas to use for events
+// engine.inputElement = canvasRight;
+
 
 function createScene() {
 
@@ -59,14 +74,20 @@ function createScene() {
     new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1),
     new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1), new BABYLON.Color4(1, 0, 0, 1)
   ];
+  var boxColors2 = [
+    new BABYLON.Color4(0, 0, 1, 1), new BABYLON.Color4(0, 0, 1, 1), new BABYLON.Color4(0, 0, 1, 1),
+    new BABYLON.Color4(0, 0, 1, 1), new BABYLON.Color4(0, 0, 1, 1), new BABYLON.Color4(0, 0, 1, 1)
+  ];
   var wheelDiameter = 2;
   var wheelThickness = 0.5;
   var wheelColors = [new BABYLON.Color4(0, 0, 0, 1), new BABYLON.Color4(0, 0, 0, 1), new BABYLON.Color4(0, 0, 0, 1)];
   var wheelY = -1;
   // ************************************
 
+  // Robot 1 - red
+
   var box = BABYLON.MeshBuilder.CreateBox("Box", {size: boxSize, faceColors: boxColors, height: 2}, scene);
-  box.position = new BABYLON.Vector3(0, 2, 0);
+  box.position = new BABYLON.Vector3(0, 2, -10);
 
   var frontRod = BABYLON.MeshBuilder.CreateCylinder("FrontRod", {height: boxSize+0.4, diameter: 0.5}, scene);
   frontRod.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
@@ -98,13 +119,54 @@ function createScene() {
   backLeftWheel.position = new BABYLON.Vector3(boxSize/2 + wheelThickness/2 + 0.2, wheelY, boxSize/2 - wheelDiameter/2);
   backLeftWheel.parent = box;
 
+  box.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.WORLD);
+
+
+  // Robot 2 - blue
+
+  var box2 = BABYLON.MeshBuilder.CreateBox("Box2", {size: boxSize, faceColors: boxColors2, height: 2}, scene);
+  box2.position = new BABYLON.Vector3(0, 2, 10);
+
+  var frontRod2 = BABYLON.MeshBuilder.CreateCylinder("FrontRod2", {height: boxSize+0.4, diameter: 0.5}, scene);
+  frontRod2.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  frontRod2.position = new BABYLON.Vector3(0, wheelY, -boxSize/2 + wheelDiameter/2);
+  frontRod2.parent = box2;
+
+  var backRod2 = BABYLON.MeshBuilder.CreateCylinder("BackRod", {height: boxSize+0.4, diameter: 0.5}, scene);
+  backRod2.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  backRod2.position = new BABYLON.Vector3(0, wheelY, boxSize/2 - wheelDiameter/2);
+  backRod2.parent = box2;
+
+  var frontRightWheel2 = BABYLON.MeshBuilder.CreateCylinder("FrontRightWheel2", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors }, scene);
+  frontRightWheel2.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  frontRightWheel2.position = new BABYLON.Vector3(-boxSize/2 - wheelThickness/2 - 0.2, wheelY, -boxSize/2 + wheelDiameter/2);
+  frontRightWheel2.parent = box2;
+
+  var frontLeftWheel2 = BABYLON.MeshBuilder.CreateCylinder("FrontLeftWheel2", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors}, scene);
+  frontLeftWheel2.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  frontLeftWheel2.position = new BABYLON.Vector3(boxSize/2 + wheelThickness/2 + 0.2, wheelY, -boxSize/2 + wheelDiameter/2);
+  frontLeftWheel2.parent = box2;
+
+  var backRightWheel2 = BABYLON.MeshBuilder.CreateCylinder("BackRightWheel2", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors}, scene);
+  backRightWheel2.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  backRightWheel2.position = new BABYLON.Vector3(-boxSize/2 - wheelThickness/2 - 0.2, wheelY, boxSize/2 - wheelDiameter/2);
+  backRightWheel2.parent = box2;
+
+  var backLeftWheel2 = BABYLON.MeshBuilder.CreateCylinder("BackLeftWheel2", {height: wheelThickness, diameter: wheelDiameter, faceColors: wheelColors}, scene);
+  backLeftWheel2.rotate(BABYLON.Axis.Z, Math.PI/2, BABYLON.Space.WORLD);
+  backLeftWheel2.position = new BABYLON.Vector3(boxSize/2 + wheelThickness/2 + 0.2, wheelY, boxSize/2 - wheelDiameter/2);
+  backLeftWheel2.parent = box2;
+
+
+
+
   // Ball
   var ball = BABYLON.MeshBuilder.CreateSphere("Ball", {diameter: 3}, scene);
   var ballMaterial = new BABYLON.StandardMaterial("ballMaterial", scene);
   ballMaterial.diffuseTexture = new BABYLON.Texture("assets/soccer_texture.jpg", scene);
   ballMaterial.bumpTexture = new BABYLON.Texture("assets/soccer_normal.png", scene);
   ball.material = ballMaterial;
-  ball.position = new BABYLON.Vector3(0, 6, -10);
+  ball.position = new BABYLON.Vector3(0, 20, 0);
 
 
   // Goalposts
@@ -117,7 +179,10 @@ function createScene() {
   //************************************
 
   var mat1 = new BABYLON.StandardMaterial('mat1', scene);
-  mat1.diffuseColor = new BABYLON.Color3(0, 0, 0)
+  mat1.diffuseColor = new BABYLON.Color3(0, 0, 1);
+
+  var mat2 = new BABYLON.StandardMaterial('mat2', scene);
+  mat2.diffuseColor = new BABYLON.Color3(1, 0, 0);
 
   var netMat = new BABYLON.StandardMaterial('netMat', scene);
   netMat.diffuseTexture = new BABYLON.Texture("assets/net_texture.png", scene);
@@ -185,31 +250,31 @@ function createScene() {
   // goalpost 2
   var base2 = BABYLON.MeshBuilder.CreateBox("base2", { size: barSize, width: goalWidth }, scene);
   base2.position = new BABYLON.Vector3(0, barSize, 0);
-  base2.material = mat1;
+  base2.material = mat2;
 
   var hbar2 = BABYLON.MeshBuilder.CreateBox("hbar2", { size: barSize, width: goalWidth }, scene);
   hbar2.position = new BABYLON.Vector3(0, goalHeight - barSize/2, -goalLength + barSize);
-  hbar2.material = mat1;
+  hbar2.material = mat2;
   hbar2.parent = base2;
 
   var vbar1_2 = BABYLON.MeshBuilder.CreateBox("vbar1_2", { size: barSize, height: goalHeight-1 }, scene);
   vbar1_2.position = new BABYLON.Vector3(-goalWidth/2 + barSize/2, goalHeight/2 - barSize/2, -goalLength + barSize);
-  vbar1_2.material = mat1;
+  vbar1_2.material = mat2;
   vbar1_2.parent = base2;
 
   var vbar2_2 = BABYLON.MeshBuilder.CreateBox("vbar2_2", { size: barSize, height: goalHeight-1 }, scene);
   vbar2_2.position = new BABYLON.Vector3(goalWidth/2 - barSize/2, goalHeight/2 - barSize/2, -goalLength + barSize);
-  vbar2_2.material = mat1;
+  vbar2_2.material = mat2;
   vbar2_2.parent = base2;
 
   var c1_2 = BABYLON.MeshBuilder.CreateBox("c1_2", { size: barSize, depth: goalLength}, scene);
   c1_2.position = new BABYLON.Vector3(goalWidth/2 - barSize/2, 0, -goalLength/2 + barSize/2);
-  c1_2.material = mat1;
+  c1_2.material = mat2;
   c1_2.parent = base2;
 
   var c2_2 = BABYLON.MeshBuilder.CreateBox("c2_2", { size: barSize, depth: goalLength}, scene);
   c2_2.position = new BABYLON.Vector3(-goalWidth/2 + barSize/2, 0, -goalLength/2 + barSize/2);
-  c2_2.material = mat1;
+  c2_2.material = mat2;
   c2_2.parent = base2;
 
   var netRight2 = BABYLON.MeshBuilder.CreateDisc("netRight", {radius: goalHeight, arc: 0.5, tessellation: 2, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene); // makes a triangle
@@ -278,7 +343,28 @@ function createScene() {
   camera.upperBetaLimit = (Math.PI / 2) * 0.9;
   camera.lowerRadiusLimit = 10;
   camera.upperRadiusLimit = 150;
-  camera.attachControl(canvas, true);
+  camera.attachControl(canvasRight, true);
+
+  var camera2 = new BABYLON.FollowCamera("Camera2", box2.position, scene);
+  camera2.lockedTarget = box2;
+  camera2.radius = 20;
+  camera2.heightOffset = 7;
+  camera2.inputs.attached.keyboard.angularSpeed = .002;
+  camera2.inputs.angularSensibitlity = 1;
+  camera2.lowerBetaLimit = 0.1;
+  camera2.upperBetaLimit = (Math.PI / 2) * 0.9;
+  camera2.lowerRadiusLimit = 10;
+  camera2.upperRadiusLimit = 150;
+  camera2.attachControl(canvasRight, true);
+
+  scene.activeCameras.push(camera);
+  scene.activeCameras.push(camera2);
+
+  camera.viewport = new BABYLON.Viewport(0, 0, 0.5, 1);
+  camera2.viewport = new BABYLON.Viewport(0.5, 0, 0.5, 1);
+
+  // engine.registerView(canvasRight, camera);
+  // engine.registerView(canvasLeft, camera);
 
 
 
@@ -289,11 +375,17 @@ function createScene() {
   ball.physicsImpostor = new BABYLON.PhysicsImpostor(ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0.7, restitution: 0.3 }, scene);
   ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.2, restitution: 0.7 }, scene);
 
-  frontRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  frontLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  backRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  backLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
-  box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 10000, friction: 0.5, restitution: 0.0 }, scene);
+  frontRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 10000, restitution: 0.0 }, scene);
+  frontLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 10000, restitution: 0.0 }, scene);
+  backRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 10000, restitution: 0.0 }, scene);
+  backLeftWheel.physicsImpostor = new BABYLON.PhysicsImpostor(backLeftWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 10000, restitution: 0.0 }, scene);
+  box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 10000, friction: 10000, restitution: 0.0 }, scene);
+
+  frontRightWheel2.physicsImpostor = new BABYLON.PhysicsImpostor(frontRightWheel2, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
+  frontLeftWheel2.physicsImpostor = new BABYLON.PhysicsImpostor(frontLeftWheel2, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
+  backRightWheel2.physicsImpostor = new BABYLON.PhysicsImpostor(backRightWheel2, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
+  backLeftWheel2.physicsImpostor = new BABYLON.PhysicsImpostor(backLeftWheel2, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
+  box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 10000, friction: 0.5, restitution: 0.0 }, scene);
 
   var goal1Components = [netRight, netLeft, netBack, hbar, vbar1, vbar2, c1, c2, base];
   for (var i = 3; i < goal1Components.length; i++) {
@@ -336,17 +428,17 @@ function createScene() {
   // Directional Movement Buttons
 
   var buttonSize = 80;
-  var buttonSetX = canvas.width/2 - buttonSize*3;
-  var buttonSetY = canvas.height/2 - buttonSize*2;
+  var buttonSetX = canvasRight.width/2 - buttonSize*5;
+  var buttonSetY = canvasRight.height/2 - buttonSize*2;
 
   //Right Button
   var rightButton = BABYLON.GUI.Button.CreateImageOnlyButton(
     "rightArrow",
     "assets/rightArrow.png"
   );
-  rightButton.left = buttonSetX + buttonSize * 2 + "px";
+  rightButton.left = buttonSetX + buttonSize*4 + "px";
   rightButton.top = buttonSetY +"px";
-  rightButton.width = buttonSize + "px";
+  rightButton.width = buttonSize*2 + "px";
   rightButton.height = buttonSize + "px";
   rightButton.thickness = 0;
   advancedTexture.addControl(rightButton);
@@ -358,7 +450,7 @@ function createScene() {
   );
   leftButton.left = buttonSetX + "px";
   leftButton.top = buttonSetY + "px";
-  leftButton.width = buttonSize + "px";
+  leftButton.width = buttonSize*2 + "px";
   leftButton.height = buttonSize + "px";
   leftButton.thickness = 0;
   advancedTexture.addControl(leftButton);
@@ -368,9 +460,9 @@ function createScene() {
     "upButton",
     "assets/upArrow.png"
   );
-  upButton.left = buttonSetX + buttonSize + "px";
+  upButton.left = buttonSetX + buttonSize*2 + "px";
   upButton.top = buttonSetY - buttonSize + "px";
-  upButton.width = buttonSize + "px";
+  upButton.width = buttonSize*2 + "px";
   upButton.height = buttonSize + "px";
   upButton.thickness = 0;
   advancedTexture.addControl(upButton);
@@ -380,9 +472,9 @@ function createScene() {
     "downButton",
     "assets/downArrow.png"
   )
-  downButton.left = buttonSetX + buttonSize + "px";
+  downButton.left = buttonSetX + buttonSize*2 + "px";
   downButton.top = buttonSetY + buttonSize + "px";
-  downButton.width = buttonSize + "px";
+  downButton.width = buttonSize*2 + "px";
   downButton.height = buttonSize + "px";
   downButton.thickness = 0;
   advancedTexture.addControl(downButton);
@@ -391,15 +483,15 @@ function createScene() {
     "dot",
     "assets/dot.png"
   )
-  dot.left = buttonSetX + buttonSize + "px";
+  dot.left = buttonSetX + buttonSize*2 + "px";
   dot.top = buttonSetY + "px";
-  dot.width = buttonSize + "px";
+  dot.width = buttonSize*2 + "px";
   dot.height = buttonSize + "px";
   dot.thickness = 0;
   advancedTexture.addControl(dot);
 
   var winText = new BABYLON.GUI.TextBlock();
-  winText.text = "You Win";
+  winText.text = "X Wins";
   winText.color = "white";
   winText.fontSize = 50;
   winText.fontFamily = "monospace";
@@ -435,13 +527,13 @@ function createScene() {
 
   keysPressed = {};
 
-  document.getElementById("canvas").addEventListener("keydown", (e) => {
+  document.getElementById("canvasRight").addEventListener("keydown", (e) => {
     //e.cancelable = false;
     e.preventDefault();
     keysPressed[e.key] = (e.type == "keydown");
   });
 
-  document.getElementById("canvas").addEventListener('keyup', (e) => {
+  document.getElementById("canvasRight").addEventListener('keyup', (e) => {
     keysPressed[e.key] = (e.type == "keydown");
   });
 
@@ -491,6 +583,7 @@ function createScene() {
   }
   var recordedScore = false;
   var score = 0;
+  var score2 = 0;
 
 
   // Detect change in state before every frame
@@ -498,20 +591,20 @@ function createScene() {
   scene.registerBeforeRender( () => {
 
     // Only allow movement and other game logic before game is over
-    // Game over after score is 10
+    // Game over after either score or score2 is 5
 
-    if (score < 10) {
+    if (score < 5 && score2 < 5) {
       
       // Robot Movement
-      if (keysPressed["a"] || buttonsPressed["left"]) { // A, left
+      if (keysPressed["a"]) { // A, left
         resetBoxPhysics();
         box.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
       }
-      if (keysPressed["d"] || buttonsPressed["right"]) {  // D, right
+      if (keysPressed["d"]) {  // D, right
         resetBoxPhysics();
         box.rotate(BABYLON.Axis.Y, 0.05, BABYLON.Space.LOCAL);
       }
-      if (keysPressed["s"] || buttonsPressed["down"]) {  // S, backward
+      if (keysPressed["s"]) {  // S, backward
         resetBoxPhysics();
         box.translate(BABYLON.Axis.Z, 0.3, BABYLON.Space.LOCAL);
       }
@@ -520,18 +613,47 @@ function createScene() {
         box.translate(BABYLON.Axis.Z, -0.3, BABYLON.Space.LOCAL);
       }
 
+      // Robot2 Movement
+      if (keysPressed["j"]) { // A, left
+        resetBoxPhysics();
+        box2.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
+      }
+      if (keysPressed["l"] || buttonsPressed["right"]) {  // D, right
+        resetBoxPhysics();
+        box2.rotate(BABYLON.Axis.Y, 0.05, BABYLON.Space.LOCAL);
+      }
+      if (keysPressed["k"] || buttonsPressed["down"]) {  // S, backward
+        resetBoxPhysics();
+        box2.translate(BABYLON.Axis.Z, 0.3, BABYLON.Space.LOCAL);
+      }
+      if (keysPressed["i"] || buttonsPressed["up"]) {  // W, forward
+        resetBoxPhysics();
+        box2.translate(BABYLON.Axis.Z, -0.3, BABYLON.Space.LOCAL);
+      }
+
 
       // Scoring a goal
 
-      if (ball.intersectsMesh(netBack, true) || ball.intersectsMesh(netRight, true) || ball.intersectsMesh(netLeft, true) ||
-          ball.intersectsMesh(netBack2, true) || ball.intersectsMesh(netRight2, true) || ball.intersectsMesh(netLeft2, true)) {
+      if (ball.intersectsMesh(netBack, true) || ball.intersectsMesh(netRight, true) || ball.intersectsMesh(netLeft, true)) {
+        ball.physicsImpostor.sleep();
+        ball.physicsImpostor.wakeUp(); console.log("wtf");
+
+        if (!recordedScore) {
+          score2++;
+          recordedScore = true;
+          console.log("red: ", score2);
+        }
+
+        ball.position = new BABYLON.Vector3(0, 2, 4);
+      }
+      else if (ball.intersectsMesh(netBack2, true) || ball.intersectsMesh(netRight2, true) || ball.intersectsMesh(netLeft2, true)) {
         ball.physicsImpostor.sleep();
         ball.physicsImpostor.wakeUp();
 
         if (!recordedScore) {
           score++;
           recordedScore = true;
-          console.log(score);
+          console.log("blue: ", score);
         }
 
         ball.position = new BABYLON.Vector3(0, 2, 4);
@@ -553,12 +675,16 @@ function createScene() {
       }
     }
     else {
+      if (score2 >= 5) {
+        winText.text = "Red Wins";
+      }
+      else { 
+        winText.text = "Blue Wins"
+      }
       winText.isVisible = true;
     }
 
   });
-
-
   return scene;
 };
 
@@ -567,4 +693,4 @@ var scene = createScene();
 
 engine.runRenderLoop( () => {
   scene.render();
-})
+});
