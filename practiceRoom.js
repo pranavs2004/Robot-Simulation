@@ -222,18 +222,6 @@ function createScene() {
   camera.attachControl(canvas, true);
 
 
-  //ScoreBoard
-  var scoreTexture = new BABYLON.DynamicTexture("scoreTexture", 512, scene, true);
-  var scoreboard = BABYLON.Mesh.CreatePlane("scoreboard", 5, scene);
-  // Position the scoreboard after the lane.
-  scoreboard.position.z = 40;
-  // Create a material for the scoreboard.
-  scoreboard.material = new BABYLON.StandardMaterial("scoradboardMat", scene);
-  // Set the diffuse texture to be the dynamic texture.
-  scoreboard.material.diffuseTexture = scoreTexture;
-
-
-
 
   // Physics---------------------------------------------------------
 
