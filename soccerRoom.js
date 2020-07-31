@@ -608,13 +608,13 @@ function createScene() {
         resetBoxPhysics();
         box.translate(BABYLON.Axis.Z, 0.3, BABYLON.Space.LOCAL);
       }
-      if (keysPressed["w"] || buttonsPressed["up"]) {  // W, forward
+      if (keysPressed["w"]) {  // W, forward
         resetBoxPhysics();
         box.translate(BABYLON.Axis.Z, -0.3, BABYLON.Space.LOCAL);
       }
 
       // Robot2 Movement
-      if (keysPressed["j"]) { // A, left
+      if (keysPressed["j"] || buttonsPressed["left"]) { // A, left
         resetBoxPhysics();
         box2.rotate(BABYLON.Axis.Y, -0.05, BABYLON.Space.LOCAL);
       }
