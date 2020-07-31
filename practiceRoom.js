@@ -95,6 +95,18 @@ function createScene() {
   ball.material = ballMaterial;
   ball.position = new BABYLON.Vector3(0, 6,  20);
 
+  var ball2 = BABYLON.MeshBuilder.CreateSphere("Ball", {diameter: 3}, scene);
+  ballMaterial.diffuseTexture = new BABYLON.Texture("assets/soccer_texture.jpg", scene);
+  ballMaterial.bumpTexture = new BABYLON.Texture("assets/soccer_normal.png", scene);
+  ball2.material = ballMaterial;
+  ball2.position = new BABYLON.Vector3(0, 8,  20);
+  
+  
+  var ball3 = BABYLON.MeshBuilder.CreateSphere("Ball", {diameter: 3}, scene);
+  ballMaterial.diffuseTexture = new BABYLON.Texture("assets/soccer_texture.jpg", scene);
+  ballMaterial.bumpTexture = new BABYLON.Texture("assets/soccer_normal.png", scene);
+  ball3.material = ballMaterial;
+  ball3.position = new BABYLON.Vector3(0, 4,  20);
 
   // Goalposts
 
@@ -208,6 +220,18 @@ function createScene() {
   camera.lowerRadiusLimit = 10;
   camera.upperRadiusLimit = 150;
   camera.attachControl(canvas, true);
+
+
+  //ScoreBoard
+  var scoreTexture = new BABYLON.DynamicTexture("scoreTexture", 512, scene, true);
+  var scoreboard = BABYLON.Mesh.CreatePlane("scoreboard", 5, scene);
+  // Position the scoreboard after the lane.
+  scoreboard.position.z = 40;
+  // Create a material for the scoreboard.
+  scoreboard.material = new BABYLON.StandardMaterial("scoradboardMat", scene);
+  // Set the diffuse texture to be the dynamic texture.
+  scoreboard.material.diffuseTexture = scoreTexture;
+
 
 
 
