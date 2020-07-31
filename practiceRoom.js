@@ -228,6 +228,8 @@ function createScene() {
   scene.enablePhysics(null, new BABYLON.CannonJSPlugin());
 
   ball.physicsImpostor = new BABYLON.PhysicsImpostor(ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0.7, restitution: 0.3 }, scene);
+  ball2.physicsImpostor = new BABYLON.PhysicsImpostor(ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0.7, restitution: 0.3 }, scene);
+  ball3.physicsImpostor = new BABYLON.PhysicsImpostor(ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0.7, restitution: 0.3 }, scene);
   ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.2, restitution: 0.7 }, scene);
 
   frontRightWheel.physicsImpostor = new BABYLON.PhysicsImpostor(frontRightWheel, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.1, restitution: 0.0 }, scene);
